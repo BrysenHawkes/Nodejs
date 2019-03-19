@@ -16,7 +16,7 @@ express()
   .get('/', (req, res) => res.render('pages/index'))
   .get('/cool',(req,res) => res.send(cool()))
   .get('/currency', function(req, res) {
-  	var name = "Brysen";
+  	var name = "Brysen"; 
     var params = {username: name};
   	res.render('pages/currency', params);
   })
@@ -41,6 +41,8 @@ function getAmountFromDB(id, callback){
 
   var sql = "SELECT currency_rate FROM rates WHERE id = 1";
   var params = [id];
+
+  console.log("getPersonFromDB called with id", id);
 
   client.query(sql, params, function(err, result){
     if (err){

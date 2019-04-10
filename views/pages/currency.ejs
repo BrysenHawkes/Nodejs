@@ -1,7 +1,28 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<style>
+			body{
+				padding: 10px;
+				justify-content: center;
+				background: #EAFAF1;
+			}
+
+			.border{
+				width: 320px;
+				height: 500px;
+				padding: 20px;
+				background: #ABEBC6;
+				color: #888;
+				text-align: center;
+				border: 3px solid #999;
+				border-radius: 6px;
+			}
+		</style>
 		<script>
+
+			var id = 1;
+			var id2 = 1;
 			function getAmount(){
 				var xhttp = new XMLHttpRequest();
 				xhttp.onreadystatechange = function()
@@ -9,9 +30,11 @@
 					if (this.readyState == 4 && this.status == 200) {
       					document.getElementById("demo").innerHTML =
       					this.responseText;
-      					//var obj = JSON.parse(responseText);
-
+      					var obj = JSON.parse(this.responseText);
+      					var myJSON = JSON.stringify(obj);
       					//var newAmount = document.getElementByID("amount").value * 19.21;
+
+      					document.getElementById("demo").innerHTML = (document.getElementById("amount").value * obj[0].currency_rate).toFixed(2);
 
       					//document.getElementById("demo").innerHTML = document.getElementByID("amount").value;
       				
@@ -19,24 +42,82 @@
       				}
       				//document.getElementById("demo").innerHTML = (document.getElementById("amount").value * 19.21);
 				}
-				xhttp.open("GET","/getAmount",true);
+				
+				id = document.getElementById("currency").options[document.getElementById("currency").selectedIndex].value;
+				xhttp.open("GET","/getAmount?id="+id,true);
 				xhttp.send();
+				//document.getElementById("teast").innerHTML = document.getElementById("currency").options[document.getElementById("currency").selectedIndex].value;
+
+			}
+
+			function adjust(){
+				var xhttp2 = new XMLHttpRequest();
+				xhttp2.onreadystatechange = function()
+				{
+					if (this.readyState == 4 && this.status == 200) {
+      					//document.getElementById("demo").innerHTML =
+      					//this.responseText;
+      					//var obj = JSON.parse(this.responseText);
+      					//var myJSON = JSON.stringify(obj);
+      					//var newAmount = document.getElementByID("amount").value * 19.21;
+
+      					//document.getElementById("demo").innerHTML = (document.getElementById("amount").value * obj[0].currency_rate).toFixed(2);
+
+      					//document.getElementById("demo").innerHTML = document.getElementByID("amount").value;
+      				
+      					//document.getElementById("demo").innerHTML = (document.getElementById("amount").value * 19.21);	
+      				}
+      				//document.getElementById("demo").innerHTML = (document.getElementById("amount").value * 19.21);
+				}
+				
+				id2 = document.getElementById("country").options[document.getElementById("country").selectedIndex].value;
+				rate = document.getElementById("newRate").value;
+				xhttp2.open("GET","/adjust?id="+id2+"rate="+rate,true);
+				xhttp2.send();
+				//document.getElementById("teast").innerHTML = document.getElementById("currency").options[document.getElementById("currency").selectedIndex].value;
+
 			}
 		</script>
 	</head>
+
+
 	<body>
-		<h2>Hello <%= username %></h2>
-		<p>
-			<form method="GET">
-				Price in Dollars:<input type="text" id="amount" name="amount"/> 
-			</form>
-		</p>
-		
-		<button type="button" onclick="getAmount()">test</button>
-		<p>
-			Price in Peso:
-		</p>
-		<div id="demo">
+		<div class="border">
+			<h3>Currency Rate Calculater</h3><br/>
+			<p>
+				<form method="GET">
+					Price in Dollars: <input type="text" id="amount" name="	amount"/> 
+				</form>
+			</p>
+			<p>
+				Price in <select id="currency" name="currency">
+					<option value="1">Mexican Peso</option>
+					<option value="2">Cuban Peso</option>
+					<option value="3">Euro</option>
+					<option value="4">Pound Sterling</option>
+				</select>: <span id="demo"> </span>
+			</p>
+			<div id="demo">
+			</div><br/>
+			<div id="teast">
+			</div>
+			<button type="button" onclick="getAmount()">Calculate</button>
+
+			<br/><br/><br/><br/><br/>
+
+			<h3>Adjust Rate</h3><br/>
+			<p>
+				Adjust the rate of the<select id="country" name="country">
+					<option value="1">Mexican Peso</option>
+					<option value="2">Cuban Peso</option>
+					<option value="3">Euro</option>
+					<option value="4">Pound Sterling</option>
+				</select> to..
+				<form method="GET">
+					<input type="text" id="newRate" name="newRate"/> 
+				</form><br/>
+				<button type="button" onclick="adjust()">Adjust</button>
+			</p>
 		</div>
 	</body>
 </html
